@@ -1,9 +1,9 @@
 derelict-libarchive [![Page on DUB](https://img.shields.io/dub/v/derelict-libarchive.svg)](http://code.dlang.org/packages/derelict-libarchive) [![License](https://img.shields.io/dub/l/derelict-libarchive.svg)](https://github.com/ohdatboi/derelict-libarchive/blob/master/LICENSE)
 =============
 
-:exclamation::exclamation:The awakened project:exclamation::exclamation:
+***!!!The awakened project!!!***
 
-:exclamation::exclamation:Original repo see [here](https://github.com/AntonMeep/derelict-libarchive):exclamation::exclamation:
+***!!!Original repo see [here](https://github.com/AntonMeep/derelict-libarchive)!!!***
 
 A dynamic binding to [libarchive](http://www.libarchive.org/) for the D programming language.
 
