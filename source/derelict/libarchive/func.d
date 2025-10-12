@@ -224,6 +224,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_free = int function(archive*);
 	alias da_archive_filter_count = la_int64_t function(archive*);
 	alias da_archive_filter_code = int function(archive*,int);
+	alias da_archive_filter_bytes = la_int64_t function(archive*,int);
 	alias da_archive_filter_name = const(char)* function(archive*,int);
 	alias da_archive_parse_date = int function(archive*, const(char)*);
 	alias da_archive_errno = int function(archive*);
@@ -458,6 +459,7 @@ __gshared {
 	da_archive_libpcre_version archive_libpcre_version;
 	da_archive_libpcre2_version archive_libpcre2_version;
 	da_archive_read_new archive_read_new;
+	da_archive_filter_bytes archive_filter_bytes;
 	da_archive_read_support_filter_all archive_read_support_filter_all;
 	da_archive_read_support_filter_by_code archive_read_support_filter_by_code;
 	da_archive_read_support_filter_bzip2 archive_read_support_filter_bzip2;
@@ -908,7 +910,7 @@ class DerelictLibArchiveLoader : SharedLibLoader {
 		bindFunc(cast(void**)&archive_entry_set_symlink_type,"archive_entry_set_symlink_type");
 		bindFunc(cast(void**)&archive_entry_digest,"archive_entry_digest");
 		bindFunc(cast(void**)&archive_entry_set_digest,"archive_entry_set_digest");
-		// bindFunc(cast(void**)&archive_libpcre_version,"archive_libpcre_version");
+		bindFunc(cast(void**)&archive_filter_bytes,"archive_filter_bytes");
 		// bindFunc(cast(void**)&archive_libpcre_version,"archive_libpcre_version");
 		// bindFunc(cast(void**)&archive_libpcre_version,"archive_libpcre_version");
 		// bindFunc(cast(void**)&archive_libpcre_version,"archive_libpcre_version");
