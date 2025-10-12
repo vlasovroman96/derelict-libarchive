@@ -46,6 +46,7 @@ alias archive_write_callback = la_ssize_t function(archive*,void*,const(void)*,s
 alias archive_seek_callback = la_int64_t function(archive*,void*,la_int64_t,int);
 alias archive_open_callback = int function(archive*,void*);
 alias archive_close_callback = int function(archive*,void*);
+alias archive_free_callback = int function(archive*,void*);
 alias archive_switch_callback = int function(archive*,void*,void*);
 alias archive_passphrase_callback = const(char)* function(archive*,void*);
 
@@ -63,6 +64,8 @@ enum ARCHIVE_FILTER_LRZIP = 10;
 enum ARCHIVE_FILTER_LZOP = 11;
 enum ARCHIVE_FILTER_GRZIP = 12;
 enum ARCHIVE_FILTER_LZ4 = 13;
+enum ARCHIVE_FILTER_ZSTD = 14;
+
 
 static if(ARCHIVE_VERSION_NUMBER < 4000000) {
 	enum ARCHIVE_COMPRESSION_NONE = ARCHIVE_FILTER_NONE;
@@ -86,6 +89,7 @@ enum ARCHIVE_FORMAT_CPIO_BIN_BE = (ARCHIVE_FORMAT_CPIO | 3);
 enum ARCHIVE_FORMAT_CPIO_SVR4_NOCRC = (ARCHIVE_FORMAT_CPIO | 4);
 enum ARCHIVE_FORMAT_CPIO_SVR4_CRC = (ARCHIVE_FORMAT_CPIO | 5);
 enum ARCHIVE_FORMAT_CPIO_AFIO_LARGE = (ARCHIVE_FORMAT_CPIO | 6);
+enum ARCHIVE_FORMAT_CPIO_PWB = (ARCHIVE_FORMAT_CPIO | 7);
 enum ARCHIVE_FORMAT_SHAR = 0x20000;
 enum ARCHIVE_FORMAT_SHAR_BASE = (ARCHIVE_FORMAT_SHAR | 1);
 enum ARCHIVE_FORMAT_SHAR_DUMP = (ARCHIVE_FORMAT_SHAR | 2);
@@ -109,6 +113,7 @@ enum ARCHIVE_FORMAT_CAB = 0xC0000;
 enum ARCHIVE_FORMAT_RAR = 0xD0000;
 enum ARCHIVE_FORMAT_7ZIP = 0xE0000;
 enum ARCHIVE_FORMAT_WARC = 0xF0000;
+enum ARCHIVE_FORMAT_RAR_V5 = 0x100000;
 
 enum ARCHIVE_READ_FORMAT_CAPS_NONE = (0);
 enum ARCHIVE_READ_FORMAT_CAPS_ENCRYPT_DATA = (1<<0);
@@ -135,6 +140,7 @@ enum ARCHIVE_EXTRACT_NO_HFS_COMPRESSION = (0x4000);
 enum ARCHIVE_EXTRACT_HFS_COMPRESSION_FORCED = (0x8000);
 enum ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS = (0x10000);
 enum ARCHIVE_EXTRACT_CLEAR_NOCHANGE_FFLAGS = (0x20000);
+enum ARCHIVE_EXTRACT_SAFE_WRITES = (0x20000);
 
 enum ARCHIVE_READDISK_RESTORE_ATIME = (0x0001);
 enum ARCHIVE_READDISK_HONOR_NODUMP = (0x0002);

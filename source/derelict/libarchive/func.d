@@ -177,8 +177,6 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_write_open_fd = int function(archive*,int);
 	alias da_archive_write_open_filename = int function(archive*,const(char)*);
 	alias da_archive_write_open_filename_w = int function(archive*,const(wchar_t)*);
-	version(Windows){
-		alias da_archive_write_open_filenames_w = int function(archive*,const(wchar_t)**, size_t);
 	alias da_archive_write_open_FILE = int function(archive*,FILE*);
 	alias da_archive_write_open_memory = int function(archive*,void*,size_t,size_t*);
 	alias da_archive_write_header = int function(archive*,archive_entry*);
@@ -227,7 +225,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_filter_count = la_int64_t function(archive*);
 	alias da_archive_filter_code = int function(archive*,int);
 	alias da_archive_filter_name = const(char)* function(archive*,int);
-	alias da_archive_parse_date = int function(archive*);
+	alias da_archive_parse_date = int function(archive*, const(char)*);
 	alias da_archive_errno = int function(archive*);
 	alias da_archive_error_string = const(char)* function(archive*);
 	alias da_archive_format_name = const(char)* function(archive*);
@@ -287,6 +285,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_devmajor = dev_t function(archive_entry*);
 	alias da_archive_entry_devminor = dev_t function(archive_entry*);
 	alias da_archive_entry_filetype = LA_MODE_T function(archive_entry*);
+	alias da_archive_entry_filetype_is_set = int function(archive_entry*);
 	alias da_archive_entry_fflags = void function(archive_entry*,c_long,c_long);
 	alias da_archive_entry_fflags_text = const(char)* function(archive_entry*);
 	alias da_archive_entry_gid = la_int64_t function(archive_entry*);
@@ -297,6 +296,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_hardlink = const(char)* function(archive_entry*);
 	alias da_archive_entry_hardlink_utf8 = const(char)* function(archive_entry*);
 	alias da_archive_entry_hardlink_w = const(wchar_t)* function(archive_entry*);
+	alias da_archive_entry_hardlink_is_set = int function(archive_entry*);
 	alias da_archive_entry_ino = la_int64_t function(archive_entry*);
 	alias da_archive_entry_ino64 = la_int64_t function(archive_entry*);
 	alias da_archive_entry_ino_is_set = int function(archive_entry*);
@@ -308,8 +308,8 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_pathname = const(char)* function(archive_entry*);
 	alias da_archive_entry_pathname_utf8 = const(char)* function(archive_entry*);
 	alias da_archive_entry_pathname_w = const(wchar_t)* function(archive_entry*);
-	alias da_archive_entry_perm_is_set = LA_MODE_T function(archive_entry*);
-	alias da_archive_entry_rdev_is_set = dev_t function(archive_entry*);
+	alias da_archive_entry_perm_is_set = int function(archive_entry*);
+	alias da_archive_entry_rdev_is_set = int function(archive_entry*);
 	alias da_archive_entry_rdevmajor = dev_t function(archive_entry*);
 	alias da_archive_entry_rdevminor = dev_t function(archive_entry*);
 	alias da_archive_entry_sourcepath = const(char)* function(archive_entry*);
@@ -317,10 +317,13 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_size = la_int64_t function(archive_entry*);
 	alias da_archive_entry_size_is_set = int function(archive_entry*);
 	alias da_archive_entry_strmode = const(char)* function(archive_entry*);
+	alias da_archive_entry_set_link_to_symlink = void function(archive_entry*);
 	alias da_archive_entry_symlink = const(char)* function(archive_entry*);
 	alias da_archive_entry_symlink_utf8 = const(char)* function(archive_entry*);
+	alias da_archive_entry_symlink_type = int function(archive_entry*);
 	alias da_archive_entry_symlink_w = const(wchar_t)* function(archive_entry*);
 	alias da_archive_entry_uid = la_int64_t function(archive_entry*);
+	alias da_archive_entry_uid_is_set = int function(archive_entry*);
 	alias da_archive_entry_uname = const(char)* function(archive_entry*);
 	alias da_archive_entry_uname_utf8 = const(char)* function(archive_entry*);
 	alias da_archive_entry_uname_w = const(wchar_t)* function(archive_entry*);
@@ -340,6 +343,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_set_filetype = void function(archive_entry*,uint);
 	alias da_archive_entry_set_fflags = void function(archive_entry*,c_ulong,c_ulong);
 	alias da_archive_entry_copy_fflags_text = const(char)* function(archive_entry*,const(char)*);
+	alias da_archive_entry_copy_fflags_text_len = const(char)* function(archive_entry*,const(char)*,size_t);
 	alias da_archive_entry_copy_fflags_text_w = const(wchar_t)* function(archive_entry*,const(wchar_t)*);
 	alias da_archive_entry_set_gid = void function(archive_entry*,la_int64_t);
 	alias da_archive_entry_set_gname = void function(archive_entry*,const(char)*);
@@ -377,6 +381,7 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_copy_sourcepath = void function(archive_entry*,const(char)*);
 	alias da_archive_entry_copy_sourcepath_w = void function(archive_entry*,const(wchar_t)*);
 	alias da_archive_entry_set_symlink = void function(archive_entry*,const(char)*);
+	alias da_archive_entry_set_symlink_type = void function(archive_entry*,int);
 	alias da_archive_entry_set_symlink_utf8 = void function(archive_entry*,const(char)*);
 	alias da_archive_entry_copy_symlink = void function(archive_entry*,const(char)*);
 	alias da_archive_entry_copy_symlink_w = void function(archive_entry*,const(wchar_t)*);
@@ -393,12 +398,14 @@ extern(C) @system @nogc nothrow {
 	alias da_archive_entry_copy_stat = void function(archive_entry*,const(stat_t)*);
 	alias da_archive_entry_mac_metadata = const(void)* function(archive_entry*,size_t*);
 	alias da_archive_entry_copy_mac_metadata = void function(archive_entry*,const(void)*,size_t);
+	alias da_archive_entry_digest = const(ubyte)* function(archive_entry*,int);
+	alias da_archive_entry_set_digest = int function(archive_entry*,int,const(ubyte)*);
 	alias da_archive_entry_acl_clear = void function(archive_entry*);
 	alias da_archive_entry_acl_add_entry = int function(archive_entry*,int,int,int,int,const(char)*);
 	alias da_archive_entry_acl_add_entry_w = int function(archive_entry*,int,int,int,int,const(wchar_t)*);
 	alias da_archive_entry_acl_reset = int function(archive_entry*,int);
 	alias da_archive_entry_acl_next = int function(archive_entry*,int,int*,int*,int*,int*,const(char)**);
-	alias da_archive_entry_acl_next_w = int function(archive_entry*,int,int*,int*,int*,int*,const(wchar_t)**);
+	//alias da_archive_entry_acl_next_w = int function(archive_entry*,int,int*,int*,int*,int*,const(wchar_t)**);
 	alias da_archive_entry_acl_to_text_w = wchar_t* function(archive_entry*,la_ssize_t*,int);
 	alias da_archive_entry_acl_to_text = char* function(archive_entry*,la_ssize_t*,int);
 	alias da_archive_entry_acl_from_text_w = int function(archive_entry*,const(wchar_t)*,int);
@@ -692,8 +699,8 @@ __gshared {
 	da_archive_entry_pathname archive_entry_pathname;
 	da_archive_entry_pathname_utf8 archive_entry_pathname_utf8;
 	da_archive_entry_pathname_w archive_entry_pathname_w;
-	da_archive_entry_perm archive_entry_perm;
-	da_archive_entry_rdev archive_entry_rdev;
+	da_archive_entry_perm_is_set archive_entry_perm;
+	da_archive_entry_rdev_is_set archive_entry_rdev;
 	da_archive_entry_rdevmajor archive_entry_rdevmajor;
 	da_archive_entry_rdevminor archive_entry_rdevminor;
 	da_archive_entry_sourcepath archive_entry_sourcepath;
@@ -782,7 +789,7 @@ __gshared {
 	da_archive_entry_acl_add_entry_w archive_entry_acl_add_entry_w;
 	da_archive_entry_acl_reset archive_entry_acl_reset;
 	da_archive_entry_acl_next archive_entry_acl_next;
-	da_archive_entry_acl_next_w archive_entry_acl_next_w;
+	// da_archive_entry_acl_next_w archive_entry_acl_next_w;
 	da_archive_entry_acl_to_text_w archive_entry_acl_to_text_w;
 	da_archive_entry_acl_to_text archive_entry_acl_to_text;
 	da_archive_entry_acl_from_text_w archive_entry_acl_from_text_w;
@@ -1171,7 +1178,7 @@ class DerelictLibArchiveLoader : SharedLibLoader {
 		bindFunc(cast(void**)&archive_entry_acl_add_entry_w,"archive_entry_acl_add_entry_w");
 		bindFunc(cast(void**)&archive_entry_acl_reset,"archive_entry_acl_reset");
 		bindFunc(cast(void**)&archive_entry_acl_next,"archive_entry_acl_next");
-		bindFunc(cast(void**)&archive_entry_acl_next_w,"archive_entry_acl_next_w", false);
+		// bindFunc(cast(void**)&archive_entry_acl_next_w,"archive_entry_acl_next_w", false);
 		bindFunc(cast(void**)&archive_entry_acl_to_text_w,"archive_entry_acl_to_text_w");
 		bindFunc(cast(void**)&archive_entry_acl_to_text,"archive_entry_acl_to_text");
 		bindFunc(cast(void**)&archive_entry_acl_from_text_w,"archive_entry_acl_from_text_w");
