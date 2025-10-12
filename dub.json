@@ -1,12 +1,13 @@
 {
 	"name": "derelict-libarchive",
 	"authors": [
-		"Anton Fediushin"
+		"Anton Fediushin",
+		"Roman Vlasov aka Doctor"
 	],
 	"dependencies": {
 		"derelict-util": "~>3.0.0-beta.1"
 	},
 	"description": "A dynamic binding to libarchive",
-	"copyright": "Copyright © 2017, Anton Fediushin",
+	"copyright": "Copyright © 2025, Anton Fediushin, Roman Vlasov",
 	"license": "MIT"
 }
