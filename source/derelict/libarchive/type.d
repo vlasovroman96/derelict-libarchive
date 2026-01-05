@@ -25,9 +25,9 @@ extern(C) nothrow:
 alias la_int64_t = long;
 alias la_ssize_t = ptrdiff_t;
 
-enum ARCHIVE_VERSION_NUMBER = 3008002;
+enum ARCHIVE_VERSION_NUMBER = 3008005;
 
-enum ARCHIVE_VERSION_ONLY_STRING = "3.8.2";
+enum ARCHIVE_VERSION_ONLY_STRING = "3.8.5";
 enum ARCHIVE_VERSION_STRING = "libarchive " ~ ARCHIVE_VERSION_ONLY_STRING;
 
 struct archive;
